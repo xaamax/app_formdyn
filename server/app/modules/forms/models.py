@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, Text
 
-from app.shared.models import EntityBase
+from app.shared.entity_base_model import EntityBase
 
 
 class Form(EntityBase):
