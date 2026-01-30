@@ -37,3 +37,5 @@ def client():
         yield test_client
 
     application.dependency_overrides.clear()
+    Base.metadata.drop_all(bind=engine)
+    engine.dispose()

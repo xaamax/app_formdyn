@@ -18,8 +18,11 @@ def test_list_forms(client):
     response = client.get('/api/v1/forms/')
     assert response.status_code == 200
 
-    data = response.json()
-    assert len(data['forms']) == 2
+    body = response.json()
+
+    assert 'items' in body
+    assert body['total_items'] == 2
+    assert len(body['items']) == 2
 
 
 def test_get_form_success(client):
