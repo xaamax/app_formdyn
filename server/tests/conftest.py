@@ -1,6 +1,3 @@
-import sys
-from pathlib import Path
-
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
@@ -9,9 +6,6 @@ from sqlalchemy.pool import StaticPool
 
 from app.app import app as application
 from app.core.database import Base, get_session
-
-ROOT_DIR = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT_DIR))
 
 
 @pytest.fixture

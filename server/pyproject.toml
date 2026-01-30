@@ -22,15 +22,15 @@ ignore = ['E501']
 preview = true
 quote-style = 'single'
 
+[tool.coverage.run]
+omit = ['app/core/database.py']
+
 [tool.pytest.ini_options]
 addopts = "--cov=app --cov-report=term-missing --cov-fail-under=90"
-
-[tool.coverage.run]
-omit = ["app/core/database.py"]
 
 [tool.taskipy.tasks]
 lint = 'ruff check'
 lint_fix = 'ruff format && ruff check --fix'
 format = 'ruff format'
 run = 'fastapi dev app/app.py'
-tests = 'pytest --cov=app --cov-report=term-missing'
+coverage = 'pytest --cov=app --cov-report=term-missing'
