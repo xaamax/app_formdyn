@@ -4,7 +4,8 @@ from sqlalchemy.sql import select
 
 from app.core.database import get_session
 from app.core.models import Form
-from .schemas import FormList, FormPublic, FormPartial, FormSchema
+
+from .schemas import FormList, FormPartial, FormPublic, FormSchema
 
 router = APIRouter(
     prefix='/api/v1/forms',
@@ -12,15 +13,13 @@ router = APIRouter(
 )
 
 
-@router.post(
-    path='/', response_model=FormPublic, status_code=status.HTTP_201_CREATED
-)
-def create_form(form: FormSchema, session: Session = Depends(get_session)):
-    form = Form(**form.model_dump())
-    session.add(form)
+@router.post("/", response_model=FormPublic, status_code=status.HTTP_201_CREATED)
+def create_form(payload: FormSchema, session: Session = Depends(get_session)):
+    db_form = Form(**payload.model_dump())
+    session.add(db_form)
     session.commit()
-    session.refresh(form)
-    return form
+    session.refresh(db_form)
+    return FormPublic.from_model(db_form)
 
 
 @router.get(path='/', response_model=FormList, status_code=status.HTTP_200_OK)
@@ -44,7 +43,7 @@ def get_form(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail='Form not found'
         )
-    return form
+    return FormPublic.from_model(form)
 
 
 @router.put(
@@ -66,7 +65,7 @@ def update_form(
         setattr(db_form, field, value)
     session.commit()
     session.refresh(db_form)
-    return db_form
+    return FormPublic.from_model(db_form)
 
 
 @router.patch(path='/{form_id}', response_model=FormPublic)
@@ -81,7 +80,7 @@ def patch_form(form_id: int, form: FormPartial, session: Session = Depends(get_s
         setattr(db_form, field, value)
     session.commit()
     session.refresh(db_form)
-    return db_form
+    return FormPublic.from_model(db_form)
 
 
 @router.delete(path='/{form_id}', status_code=status.HTTP_204_NO_CONTENT)

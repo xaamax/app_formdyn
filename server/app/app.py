@@ -1,5 +1,6 @@
 from fastapi import FastAPI
-from .modules.forms.routers import router as form_routers  
+
+from .modules.forms.routers import router as form_routers
 
 app = FastAPI(
     title='FormDyn API',

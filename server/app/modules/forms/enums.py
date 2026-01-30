@@ -1,5 +1,6 @@
 from enum import IntEnum
 
+
 class FormTypeEnum(IntEnum):
     FORMULARIO_ENSINO_FUNDAMENTAL = 1
     FORMULARIO_ENSINO_MEDIO = 2
