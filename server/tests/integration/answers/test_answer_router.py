@@ -1,6 +1,6 @@
-def _create_answers_form(client):
+def _create_answers(client):
     response = client.post(
-        '/api/v1/answers_forms/',
+        '/api/v1/answers/',
         json={
             'description': 'teste_description',
             'legend': 'teste_legend',
@@ -14,8 +14,8 @@ def _create_answers_form(client):
     return response.json()
 
 
-def test_create_answers_form(client):
-    data = _create_answers_form(client)
+def test_create_answers(client):
+    data = _create_answers(client)
 
     assert data['id'] is not None
     assert data['description'] == 'teste_description'
@@ -26,11 +26,11 @@ def test_create_answers_form(client):
     assert data['background'] == '#FFFFF'
 
 
-def test_list_answers_forms(client):
-    _create_answers_form(client)
-    _create_answers_form(client)
+def test_list_answers(client):
+    _create_answers(client)
+    _create_answers(client)
 
-    response = client.get('/api/v1/answers_forms/')
+    response = client.get('/api/v1/answers/')
     assert response.status_code == 200
 
     body = response.json()
@@ -40,31 +40,31 @@ def test_list_answers_forms(client):
     assert len(body['items']) == 2
 
 
-def test_get_answers_form_success(client):
-    created = _create_answers_form(client)
-    answers_form_id = created['id']
+def test_get_answers_success(client):
+    created = _create_answers(client)
+    answers_id = created['id']
 
-    response = client.get(f'/api/v1/answers_forms/{answers_form_id}')
+    response = client.get(f'/api/v1/answers/{answers_id}')
     assert response.status_code == 200
 
     data = response.json()
-    assert data['id'] == answers_form_id
+    assert data['id'] == answers_id
     assert data['description'] == 'teste_description'
 
 
-def test_get_answers_form_not_found(client):
-    response = client.get('/api/v1/answers_forms/999')
+def test_get_answers_not_found(client):
+    response = client.get('/api/v1/answers/999')
 
     assert response.status_code == 404
-    assert response.json()['detail'] == 'AnswerForm not found'
+    assert response.json()['detail'] == 'Answer not found'
 
 
-def test_update_answers_form(client):
-    created = _create_answers_form(client)
-    answers_form_id = created['id']
+def test_update_answers(client):
+    created = _create_answers(client)
+    answers_id = created['id']
 
     response = client.put(
-        f'/api/v1/answers_forms/{answers_form_id}',
+        f'/api/v1/answers/{answers_id}',
         json={
             'description': 'teste_description',
             'legend': 'teste_legend',
@@ -83,9 +83,9 @@ def test_update_answers_form(client):
     assert data['legend'] == 'teste_legend'
 
 
-def test_update_answers_form_not_found(client):
+def test_update_answers_not_found(client):
     response = client.put(
-        '/api/v1/answers_forms/999',
+        '/api/v1/answers/999',
         json={
             'description': 'teste_description',
             'legend': 'teste_legend',
@@ -97,15 +97,15 @@ def test_update_answers_form_not_found(client):
     )
 
     assert response.status_code == 404
-    assert response.json()['detail'] == 'AnswerForm not found'
+    assert response.json()['detail'] == 'Answer not found'
 
 
-def test_patch_answers_form(client):
-    created = _create_answers_form(client)
-    answers_form_id = created['id']
+def test_patch_answers(client):
+    created = _create_answers(client)
+    answers_id = created['id']
 
     response = client.patch(
-        f'/api/v1/answers_forms/{answers_form_id}',
+        f'/api/v1/answers/{answers_id}',
         json={
             'description': 'teste_description',
             'order': 99,
@@ -119,26 +119,26 @@ def test_patch_answers_form(client):
     assert data['order'] == 99
 
 
-def test_patch_answers_form_not_found(client):
+def test_patch_answers_not_found(client):
     response = client.patch(
-        '/api/v1/answers_forms/999',
+        '/api/v1/answers/999',
         json={'description': 'X'},
     )
 
     assert response.status_code == 404
-    assert response.json()['detail'] == 'AnswerForm not found'
+    assert response.json()['detail'] == 'Answer not found'
 
 
-def test_delete_answers_form(client):
-    created = _create_answers_form(client)
-    answers_form_id = created['id']
+def test_delete_answers(client):
+    created = _create_answers(client)
+    answers_id = created['id']
 
-    response = client.delete(f'/api/v1/answers_forms/{answers_form_id}')
+    response = client.delete(f'/api/v1/answers/{answers_id}')
     assert response.status_code == 204
 
 
-def test_delete_answers_form_not_found(client):
-    response = client.delete('/api/v1/answers_forms/999')
+def test_delete_answers_not_found(client):
+    response = client.delete('/api/v1/answers/999')
 
     assert response.status_code == 404
-    assert response.json()['detail'] == 'AnswerForm not found'
+    assert response.json()['detail'] == 'Answer not found'

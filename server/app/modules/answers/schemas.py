@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from app.shared.pagination import PaginatedResponse
 
 
-class AnswerFormSchema(BaseModel):
+class AnswerSchema(BaseModel):
     description: str
     legend: str
     order: int
@@ -14,7 +14,7 @@ class AnswerFormSchema(BaseModel):
     background: Optional[str] = None
 
 
-class AnswerFormPartial(BaseModel):
+class AnswerPartial(BaseModel):
     description: Optional[str] = None
     legend: Optional[str] = None
     order: Optional[int] = None
@@ -23,7 +23,7 @@ class AnswerFormPartial(BaseModel):
     background: Optional[str] = None
 
 
-class AnswerFormPublic(BaseModel):
+class AnswerPublic(BaseModel):
     id: int
     description: str
     legend: str
@@ -35,4 +35,4 @@ class AnswerFormPublic(BaseModel):
     def from_model(cls, model):
         return cls.model_validate(model.__dict__)
 
-AnswerFormPaginated = PaginatedResponse[AnswerFormPublic]
+AnswerPaginated = PaginatedResponse[AnswerPublic]

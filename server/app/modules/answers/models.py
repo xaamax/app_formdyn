@@ -3,8 +3,8 @@ from sqlalchemy import Boolean, Column, Integer, String, Text
 from app.shared.entity_base_model import EntityBase
 
 
-class AnswerForm(EntityBase):
-    __tablename__ = 'answers_forms'
+class Answer(EntityBase):
+    __tablename__ = 'answers'
 
     id = Column(Integer, primary_key=True, index=True)
     description = Column(Text, nullable=False)
