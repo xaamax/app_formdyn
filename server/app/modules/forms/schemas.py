@@ -3,6 +3,7 @@ from typing import Optional
 from pydantic import BaseModel
 
 from app.modules.forms.enums import FormTypeEnum
+from app.shared.pagination import PaginatedResponse
 
 
 class FormSchema(BaseModel):
@@ -31,5 +32,4 @@ class FormPublic(BaseModel):
         )
 
 
-class FormList(BaseModel):
-    forms: list[FormPublic]
+FormList = PaginatedResponse

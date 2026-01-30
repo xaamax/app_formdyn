@@ -4,6 +4,7 @@ from sqlalchemy.sql import select
 
 from app.core.database import get_session
 from app.core.models import Form
+from app.shared.pagination import paginate_response
 
 from .schemas import FormList, FormPartial, FormPublic, FormSchema
 
@@ -27,12 +28,16 @@ def create_form(payload: FormSchema, session: Session = Depends(get_session)):
 @router.get(path='/', response_model=FormList, status_code=status.HTTP_200_OK)
 def list_forms(
     session: Session = Depends(get_session),
-    page_number: int = 0,
+    page_number: int = 1,
     page_size: int = 10,
 ):
-    query = session.scalars(select(Form).offset(page_number).limit(page_size))
-    forms = query.all()
-    return {'forms': [FormPublic.from_model(form) for form in forms]}
+    return paginate_response(
+        session=session,
+        query=select(Form),
+        page_number=page_number,
+        page_size=page_size,
+        mapper=FormPublic.from_model,
+    )
 
 
 @router.get(

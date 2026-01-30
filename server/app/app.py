@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 
+from .modules.fields.routers import router as field_routers
 from .modules.forms.routers import router as form_routers
 
 app = FastAPI(
@@ -9,3 +10,4 @@ app = FastAPI(
 )
 
 app.include_router(form_routers)
+app.include_router(field_routers)
