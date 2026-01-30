@@ -7,19 +7,18 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
-ROOT_DIR = Path(__file__).resolve().parents[1]
-sys.path.append(str(ROOT_DIR))
-
-import app.core.models  # noqa
 from app.app import app as application
 from app.core.database import Base, get_session
 
+ROOT_DIR = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT_DIR))
 
-@pytest.fixture(scope="function")
+
+@pytest.fixture
 def client():
     engine = create_engine(
-        "sqlite://",
-        connect_args={"check_same_thread": False},
+        'sqlite://',
+        connect_args={'check_same_thread': False},
         poolclass=StaticPool,
     )
 

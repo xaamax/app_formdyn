@@ -4,19 +4,19 @@ from app.modules.forms.enums import FormTypeEnum
 
 
 @pytest.mark.parametrize(
-    "enum_value,expected_label",
+    ('enum_value', 'expected_label'),
     [
         (
             FormTypeEnum.FORMULARIO_ENSINO_FUNDAMENTAL,
-            "Formulário Ensino Fundamental",
+            'Formulário Ensino Fundamental',
         ),
         (
             FormTypeEnum.FORMULARIO_ENSINO_MEDIO,
-            "Formulário Ensino Médio",
+            'Formulário Ensino Médio',
         ),
         (
             FormTypeEnum.FORMULARIO_EJA,
-            "Formulário EJA",
+            'Formulário EJA',
         ),
     ],
 )

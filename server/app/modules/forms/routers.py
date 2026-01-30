@@ -13,7 +13,9 @@ router = APIRouter(
 )
 
 
-@router.post("/", response_model=FormPublic, status_code=status.HTTP_201_CREATED)
+@router.post(
+    '/', response_model=FormPublic, status_code=status.HTTP_201_CREATED
+)
 def create_form(payload: FormSchema, session: Session = Depends(get_session)):
     db_form = Form(**payload.model_dump())
     session.add(db_form)
@@ -33,7 +35,11 @@ def list_forms(
     return {'forms': [FormPublic.from_model(form) for form in forms]}
 
 
-@router.get(path='/{form_id}', response_model=FormPublic, status_code=status.HTTP_200_OK)
+@router.get(
+    path='/{form_id}',
+    response_model=FormPublic,
+    status_code=status.HTTP_200_OK,
+)
 def get_form(
     form_id: int,
     session: Session = Depends(get_session),
@@ -69,13 +75,17 @@ def update_form(
 
 
 @router.patch(path='/{form_id}', response_model=FormPublic)
-def patch_form(form_id: int, form: FormPartial, session: Session = Depends(get_session)):
+def patch_form(
+    form_id: int, form: FormPartial, session: Session = Depends(get_session)
+):
     db_form = session.get(Form, form_id)
     if not db_form:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail='Form not found'
         )
-    update_data = {k: v for k, v in form.model_dump(exclude_unset=True).items()}
+    update_data = {
+        k: v for k, v in form.model_dump(exclude_unset=True).items()
+    }
     for field, value in update_data.items():
         setattr(db_form, field, value)
     session.commit()

@@ -25,7 +25,9 @@ class FormPublic(BaseModel):
         return cls(
             id=model.id,
             name=model.name,
-            type=FormTypeEnum(model.type).label if model.type is not None else None
+            type=FormTypeEnum(model.type).label
+            if model.type is not None
+            else None,
         )
 
 

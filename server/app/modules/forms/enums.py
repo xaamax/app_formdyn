@@ -9,8 +9,8 @@ class FormTypeEnum(IntEnum):
     @property
     def label(self) -> str:
         labels = {
-            FormTypeEnum.FORMULARIO_ENSINO_FUNDAMENTAL: "Formulário Ensino Fundamental",
-            FormTypeEnum.FORMULARIO_ENSINO_MEDIO: "Formulário Ensino Médio",
-            FormTypeEnum.FORMULARIO_EJA: "Formulário EJA",
+            FormTypeEnum.FORMULARIO_ENSINO_FUNDAMENTAL: 'Formulário Ensino Fundamental',
+            FormTypeEnum.FORMULARIO_ENSINO_MEDIO: 'Formulário Ensino Médio',
+            FormTypeEnum.FORMULARIO_EJA: 'Formulário EJA',
         }
         return labels[self]
