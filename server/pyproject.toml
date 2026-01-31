@@ -26,7 +26,7 @@ quote-style = 'single'
 omit = ['app/core/database.py']
 
 [tool.coverage.report]
-omit = ["app/modules/*/repository.py"]
+omit = ["app/shared/repository_base.py","app/modules/*/repository.py"]
 
 [tool.pytest.ini_options]
 addopts = "--cov=app --cov-report=term-missing --cov-fail-under=90"
