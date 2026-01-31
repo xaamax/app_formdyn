@@ -2,9 +2,9 @@ from sqlalchemy.orm import Session
 
 from app.shared.repository_base import RepositoryBase
 
-from .models import Form
+from .models import Field
 
 
-class FormRepository(RepositoryBase[Form]):
+class FieldRepository(RepositoryBase[Field]):
     def __init__(self, session: Session):
-        super().__init__(session, Form)
+        super().__init__(session, Field)

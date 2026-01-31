@@ -1,9 +1,9 @@
 import pytest
 
-from app.modules.forms.service import FormService
-from app.modules.forms.schemas import FormSchema, FormPartial
-from app.modules.forms.models import Form
 from app.modules.forms.exceptions import FormNotFoundError
+from app.modules.forms.models import Form
+from app.modules.forms.schemas import FormPartial, FormSchema
+from app.modules.forms.service import FormService
 
 
 class FakeFormRepository:
@@ -13,7 +13,7 @@ class FakeFormRepository:
 
     def list(self):
         return list(self.data.values())
-    
+
     def create(self, form: Form) -> Form:
         if not getattr(form, 'id', None):
             form.id = self.counter
@@ -40,7 +40,7 @@ def test_form_service_list():
     assert len(result) == 2
     assert result[0].name == 'Form A'
     assert result[1].name == 'Form B'
-    
+
 
 def test_form_service_create():
     repo = FakeFormRepository()
@@ -79,9 +79,7 @@ def test_form_service_update():
 
     created = service.create(FormSchema(name='Original', type=1))
 
-    updated = service.update(
-        created.id, FormSchema(name='Updated', type=2)
-    )
+    updated = service.update(created.id, FormSchema(name='Updated', type=2))
 
     assert updated.id == created.id
     assert updated.name == 'Updated'

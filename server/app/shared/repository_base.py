@@ -1,8 +1,9 @@
-from typing import Generic, TypeVar, Type
+from typing import Generic, Type, TypeVar
+
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import select
 
-T = TypeVar("T")
+T = TypeVar('T')
 
 
 class RepositoryBase(Generic[T]):
@@ -11,9 +12,7 @@ class RepositoryBase(Generic[T]):
         self.model = model
 
     def list(self) -> list[T]:
-        return self.session.execute(
-            select(self.model)
-        ).scalars().all()
+        return self.session.execute(select(self.model)).scalars().all()
 
     def get_by_id(self, entity_id: int) -> T | None:
         return self.session.get(self.model, entity_id)

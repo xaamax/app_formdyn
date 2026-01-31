@@ -30,7 +30,7 @@ def test_list_forms(client):
 def test_get_form_success(client):
     created = _create_form(client, 'Get Test', 1)
 
-    response = client.get(f"/api/v1/forms/{created['id']}")
+    response = client.get(f'/api/v1/forms/{created["id"]}')
     assert response.status_code == 200
 
     data = response.json()
@@ -49,11 +49,11 @@ def test_update_form(client):
     created = _create_form(client, 'Old', 1)
 
     response = client.put(
-        f"/api/v1/forms/{created['id']}",
+        f'/api/v1/forms/{created["id"]}',
         json={'name': 'New', 'type': 2},
     )
 
-    assert response.status_code in (200, 201)
+    assert response.status_code == 200
     data = response.json()
 
     assert data['name'] == 'New'
@@ -74,7 +74,7 @@ def test_patch_form(client):
     created = _create_form(client, 'Patch', 1)
 
     response = client.patch(
-        f"/api/v1/forms/{created['id']}",
+        f'/api/v1/forms/{created["id"]}',
         json={'name': 'Patch Atualizado'},
     )
 
@@ -95,7 +95,7 @@ def test_patch_form_not_found(client):
 def test_delete_form(client):
     created = _create_form(client, 'Delete', 1)
 
-    response = client.delete(f"/api/v1/forms/{created['id']}")
+    response = client.delete(f'/api/v1/forms/{created["id"]}')
     assert response.status_code == 204
 
 
