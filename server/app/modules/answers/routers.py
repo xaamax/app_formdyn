@@ -85,7 +85,9 @@ def update_field(
 
 @router.patch(path='/{field_id}', response_model=AnswerPublic)
 def patch_field(
-    field_id: int, field: AnswerPartial, session: Session = Depends(get_session)
+    field_id: int,
+    field: AnswerPartial,
+    session: Session = Depends(get_session),
 ):
     db_field = session.get(Answer, field_id)
     if not db_field:

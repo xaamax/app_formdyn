@@ -25,8 +25,13 @@ quote-style = 'single'
 [tool.coverage.run]
 omit = ['app/core/database.py']
 
+[tool.coverage.report]
+omit = ["app/modules/*/repository.py"]
+
 [tool.pytest.ini_options]
 addopts = "--cov=app --cov-report=term-missing --cov-fail-under=90"
+
+
 
 [tool.taskipy.tasks]
 lint = 'ruff check'

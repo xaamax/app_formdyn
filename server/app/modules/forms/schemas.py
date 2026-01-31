@@ -32,4 +32,4 @@ class FormPublic(BaseModel):
         )
 
 
-FormList = PaginatedResponse
+FormListPaginated = PaginatedResponse

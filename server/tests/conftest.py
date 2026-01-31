@@ -11,8 +11,8 @@ from app.core.database import Base, get_session
 @pytest.fixture
 def client():
     engine = create_engine(
-        "sqlite://",
-        connect_args={"check_same_thread": False},
+        'sqlite://',
+        connect_args={'check_same_thread': False},
         poolclass=StaticPool,
     )
 
@@ -38,4 +38,4 @@ def client():
 
     application.dependency_overrides.clear()
     Base.metadata.drop_all(bind=engine)
-    engine.dispose() 
+    engine.dispose()

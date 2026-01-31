@@ -1,38 +1,48 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy import select
 from sqlalchemy.orm import Session
-from sqlalchemy.sql import select
 
 from app.core.database import get_session
-from app.core.models import Form
 from app.shared.pagination import paginate_response
 
-from .schemas import FormList, FormPartial, FormPublic, FormSchema
-
-router = APIRouter(
-    prefix='/api/v1/forms',
-    tags=['Formulários'],
+from .exceptions import FormNotFoundError
+from .models import Form
+from .repository import FormRepository
+from .schemas import (
+    FormListPaginated,
+    FormPartial,
+    FormPublic,
+    FormSchema,
 )
+from .service import FormService
+
+router = APIRouter(prefix='/api/v1/forms', tags=['Forulários'])
+
+
+def get_service(session: Session = Depends(get_session)):
+    repo = FormRepository(session)
+    return FormService(repo)
 
 
 @router.post(
     '/', response_model=FormPublic, status_code=status.HTTP_201_CREATED
 )
-def create_form(payload: FormSchema, session: Session = Depends(get_session)):
-    db_form = Form(**payload.model_dump())
-    session.add(db_form)
-    session.commit()
-    session.refresh(db_form)
-    return FormPublic.from_model(db_form)
+def create_form(
+    payload: FormSchema,
+    service: FormService = Depends(get_service),
+):
+    form = service.create(payload)
+    return FormPublic.from_model(form)
 
 
-@router.get(path='/', response_model=FormList, status_code=status.HTTP_200_OK)
+@router.get('/', response_model=FormListPaginated)
 def list_forms(
-    session: Session = Depends(get_session),
     page_number: int = 1,
     page_size: int = 10,
+    service: FormService = Depends(get_service),
 ):
     return paginate_response(
-        session=session,
+        session=service.repository.session,
         query=select(Form),
         page_number=page_number,
         page_size=page_size,
@@ -40,73 +50,50 @@ def list_forms(
     )
 
 
-@router.get(
-    path='/{form_id}',
-    response_model=FormPublic,
-    status_code=status.HTTP_200_OK,
-)
+@router.get('/{form_id}', response_model=FormPublic)
 def get_form(
     form_id: int,
-    session: Session = Depends(get_session),
+    service: FormService = Depends(get_service),
 ):
-    form = session.get(Form, form_id)
-    if not form:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail='Form not found'
-        )
-    return FormPublic.from_model(form)
+    try:
+        form = service.get(form_id)
+        return FormPublic.from_model(form)
+    except FormNotFoundError:
+        raise HTTPException(status_code=404, detail='Form not found')
 
 
-@router.put(
-    path='/{form_id}',
-    response_model=FormPublic,
-    status_code=status.HTTP_201_CREATED,
-)
+@router.put('/{form_id}', response_model=FormPublic)
 def update_form(
     form_id: int,
-    form: FormSchema,
-    session: Session = Depends(get_session),
+    payload: FormSchema,
+    service: FormService = Depends(get_service),
 ):
-    db_form = session.get(Form, form_id)
-    if not db_form:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail='Form not found'
-        )
-    for field, value in form.model_dump().items():
-        setattr(db_form, field, value)
-    session.commit()
-    session.refresh(db_form)
-    return FormPublic.from_model(db_form)
+    try:
+        form = service.update(form_id, payload)
+        return FormPublic.from_model(form)
+    except FormNotFoundError:
+        raise HTTPException(status_code=404, detail='Form not found')
 
 
-@router.patch(path='/{form_id}', response_model=FormPublic)
+@router.patch('/{form_id}', response_model=FormPublic)
 def patch_form(
-    form_id: int, form: FormPartial, session: Session = Depends(get_session)
+    form_id: int,
+    payload: FormPartial,
+    service: FormService = Depends(get_service),
 ):
-    db_form = session.get(Form, form_id)
-    if not db_form:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail='Form not found'
-        )
-    update_data = {
-        k: v for k, v in form.model_dump(exclude_unset=True).items()
-    }
-    for field, value in update_data.items():
-        setattr(db_form, field, value)
-    session.commit()
-    session.refresh(db_form)
-    return FormPublic.from_model(db_form)
+    try:
+        form = service.patch(form_id, payload)
+        return FormPublic.from_model(form)
+    except FormNotFoundError:
+        raise HTTPException(status_code=404, detail='Form not found')
 
 
-@router.delete(path='/{form_id}', status_code=status.HTTP_204_NO_CONTENT)
+@router.delete('/{form_id}', status_code=status.HTTP_204_NO_CONTENT)
 def delete_form(
     form_id: int,
-    session: Session = Depends(get_session),
+    service: FormService = Depends(get_service),
 ):
-    form = session.get(Form, form_id)
-    if not form:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail='Form not found'
-        )
-    session.delete(form)
-    session.commit()
+    try:
+        service.delete(form_id)
+    except FormNotFoundError:
+        raise HTTPException(status_code=404, detail='Form not found')

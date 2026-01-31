@@ -6,7 +6,12 @@ from app.core.database import get_session
 from app.core.models import OptionAnswer
 from app.shared.pagination import paginate_response
 
-from .schemas import OptionAnswerPaginated, OptionAnswerPartial, OptionAnswerPublic, OptionAnswerSchema
+from .schemas import (
+    OptionAnswerPaginated,
+    OptionAnswerPartial,
+    OptionAnswerPublic,
+    OptionAnswerSchema,
+)
 
 router = APIRouter(
     prefix='/api/v1/options_answers',
@@ -28,7 +33,9 @@ def create_option_answer(
 
 
 @router.get(
-    path='/', response_model=OptionAnswerPaginated, status_code=status.HTTP_200_OK
+    path='/',
+    response_model=OptionAnswerPaginated,
+    status_code=status.HTTP_200_OK,
 )
 def list_options_answers(
     session: Session = Depends(get_session),
@@ -56,7 +63,8 @@ def get_option_answer(
     field = session.get(OptionAnswer, option_answer_id)
     if not field:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail='OptionAnswer not found'
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail='OptionAnswer not found',
         )
     return OptionAnswerPublic.from_model(field)
 
@@ -74,7 +82,8 @@ def update_option_answer(
     db_option_answer = session.get(OptionAnswer, option_answer_id)
     if not db_option_answer:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail='OptionAnswer not found'
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail='OptionAnswer not found',
         )
     for attr, value in field.model_dump().items():
         setattr(db_option_answer, attr, value)
@@ -85,12 +94,15 @@ def update_option_answer(
 
 @router.patch(path='/{option_answer_id}', response_model=OptionAnswerPublic)
 def patch_option_answer(
-    option_answer_id: int, field: OptionAnswerPartial, session: Session = Depends(get_session)
+    option_answer_id: int,
+    field: OptionAnswerPartial,
+    session: Session = Depends(get_session),
 ):
     db_option_answer = session.get(OptionAnswer, option_answer_id)
     if not db_option_answer:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail='OptionAnswer not found'
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail='OptionAnswer not found',
         )
     update_data = {
         k: v for k, v in field.model_dump(exclude_unset=True).items()
@@ -102,7 +114,9 @@ def patch_option_answer(
     return OptionAnswerPublic.from_model(db_option_answer)
 
 
-@router.delete(path='/{option_answer_id}', status_code=status.HTTP_204_NO_CONTENT)
+@router.delete(
+    path='/{option_answer_id}', status_code=status.HTTP_204_NO_CONTENT
+)
 def delete_option_answer(
     option_answer_id: int,
     session: Session = Depends(get_session),
@@ -110,7 +124,8 @@ def delete_option_answer(
     field = session.get(OptionAnswer, option_answer_id)
     if not field:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail='OptionAnswer not found'
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail='OptionAnswer not found',
         )
     session.delete(field)
     session.commit()

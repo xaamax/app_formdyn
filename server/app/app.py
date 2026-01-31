@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 
+from .modules.answers.routers import router as answer_routers
 from .modules.fields.routers import router as field_routers
 from .modules.forms.routers import router as form_routers
-from .modules.answers.routers import router as answer_routers
 from .modules.options_answers.routers import router as option_answer_routers
 
 app = FastAPI(

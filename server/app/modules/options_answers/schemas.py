@@ -21,18 +21,18 @@ class OptionAnswerPublic(BaseModel):
     id: int
     form_name: str
     answer_description: str | None
+
     @classmethod
     def from_model(cls, model):
         data = {
-            "id": model.id,
-            "order": model.order,
-            "form_name": model.form.name,
-            "answer_description": (
-                    model.answer.description
-                    if model.answer is not None
-                    else None
-                ),
+            'id': model.id,
+            'order': model.order,
+            'form_name': model.form.name,
+            'answer_description': (
+                model.answer.description if model.answer is not None else None
+            ),
         }
         return cls.model_validate(data)
+
 
 OptionAnswerPaginated = PaginatedResponse[OptionAnswerPublic]

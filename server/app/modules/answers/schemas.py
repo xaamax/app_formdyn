@@ -31,8 +31,10 @@ class AnswerPublic(BaseModel):
     only_legend: bool
     color: str | None
     background: str | None
+
     @classmethod
     def from_model(cls, model):
         return cls.model_validate(model.__dict__)
+
 
 AnswerPaginated = PaginatedResponse[AnswerPublic]

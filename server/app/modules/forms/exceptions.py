@@ -1,0 +1,2 @@
+class FormNotFoundError(Exception):
+    pass

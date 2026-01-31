@@ -1,6 +1,5 @@
-from sqlalchemy import create_engine, event
+from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.engine import Engine
 from sqlalchemy.orm import sessionmaker
 
 DATABASE_URL = 'sqlite:///formdyn.db'
@@ -17,6 +16,7 @@ def get_session():
         yield session
     finally:
         session.close()
+
 
 # @event.listens_for(Engine, "connect")
 # def enable_sqlite_foreign_keys(dbapi_connection, connection_record):

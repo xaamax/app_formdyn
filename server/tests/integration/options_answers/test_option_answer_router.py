@@ -10,6 +10,7 @@ def _create_form(client):
     assert response.status_code == 201
     return response.json()
 
+
 def _create_answer(client):
     response = client.post(
         '/api/v1/answers/',
@@ -24,6 +25,7 @@ def _create_answer(client):
     )
     assert response.status_code == 201
     return response.json()
+
 
 def _create_option_answer(client):
     form = _create_form(client)
@@ -80,6 +82,7 @@ def test_get_option_answer_not_found(client):
     assert response.status_code == 404
     assert response.json()['detail'] == 'OptionAnswer not found'
 
+
 def test_update_option_answer(client):
     created = _create_option_answer(client)
     option_answer_id = created['id']
@@ -102,7 +105,8 @@ def test_update_option_answer(client):
     assert data['id'] == option_answer_id
     assert data['form_name'] == new_form['name']
     assert data['answer_description'] == new_answer['description']
-    
+
+
 def test_update_option_answer_not_found(client):
     response = client.put(
         '/api/v1/options_answers/999',

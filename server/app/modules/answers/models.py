@@ -15,7 +15,6 @@ class Answer(EntityBase):
     color = Column(String, nullable=True)
     background = Column(String, nullable=True)
 
-
     options_answers = relationship(
         'OptionAnswer',
         back_populates='answer',
