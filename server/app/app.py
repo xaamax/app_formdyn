@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from .modules.fields.routers import router as field_routers
 from .modules.forms.routers import router as form_routers
 from .modules.answers.routers import router as answer_routers
+from .modules.options_answers.routers import router as option_answer_routers
 
 app = FastAPI(
     title='FormDyn API',
@@ -11,5 +12,6 @@ app = FastAPI(
 )
 
 app.include_router(form_routers)
+app.include_router(option_answer_routers)
 app.include_router(field_routers)
 app.include_router(answer_routers)

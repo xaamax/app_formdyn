@@ -19,7 +19,7 @@ class FormPartial(BaseModel):
 class FormPublic(BaseModel):
     id: int
     name: str
-    type: Optional[str] = None
+    type: str | None
 
     @classmethod
     def from_model(cls, model):

@@ -43,12 +43,12 @@ class FieldPublic(BaseModel):
     type: str
     order: int
     readonly: bool
-    observation: Optional[str] = None
-    optional: Optional[str] = None
-    grid: Optional[str] = None
-    size: Optional[int] = None
-    mask: Optional[str] = None
-    placeholder: Optional[str] = None
+    observation: str | None
+    optional: str | None
+    grid: str | None
+    size: int | None
+    mask: str | None
+    placeholder: str | None
 
     @classmethod
     def from_model(cls, model):

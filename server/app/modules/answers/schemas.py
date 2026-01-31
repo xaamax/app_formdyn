@@ -29,8 +29,8 @@ class AnswerPublic(BaseModel):
     legend: str
     order: int
     only_legend: bool
-    color: Optional[str] = None
-    background: Optional[str] = None
+    color: str | None
+    background: str | None
     @classmethod
     def from_model(cls, model):
         return cls.model_validate(model.__dict__)
