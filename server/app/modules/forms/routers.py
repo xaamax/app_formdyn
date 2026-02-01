@@ -23,21 +23,19 @@ router = APIRouter(
 
 
 def get_service(session: Session = Depends(get_session)):
-    repo = FormRepository(session)
-    return FormService(repo)
+    return FormService(FormRepository(session))
 
 
 @router.post(
     '/',
-    response_model=FormPublic,
     status_code=status.HTTP_201_CREATED,
+    responses={400: {'model': ErrorResponse}},
 )
 def create_form(
     payload: FormSchema,
     service: FormService = Depends(get_service),
 ):
-    form = service.create(payload)
-    return FormPublic.from_model(form)
+    return FormPublic.from_model(service.create(payload))
 
 
 @router.get(
@@ -67,36 +65,39 @@ def get_form(
     form_id: int,
     service: FormService = Depends(get_service),
 ):
-    form = service.get(form_id)
-    return FormPublic.from_model(form)
+    return FormPublic.from_model(service.get(form_id))
 
 
 @router.put(
     '/{form_id}',
     response_model=FormPublic,
-    responses={404: {'model': ErrorResponse}},
+    responses={
+        400: {'model': ErrorResponse},
+        404: {'model': ErrorResponse},
+    },
 )
 def update_form(
     form_id: int,
     payload: FormSchema,
     service: FormService = Depends(get_service),
 ):
-    form = service.update(form_id, payload)
-    return FormPublic.from_model(form)
+    return FormPublic.from_model(service.update(form_id, payload))
 
 
 @router.patch(
     '/{form_id}',
     response_model=FormPublic,
-    responses={404: {'model': ErrorResponse}},
+    responses={
+        400: {'model': ErrorResponse},
+        404: {'model': ErrorResponse},
+    },
 )
 def patch_form(
     form_id: int,
     payload: FormPartial,
     service: FormService = Depends(get_service),
 ):
-    form = service.patch(form_id, payload)
-    return FormPublic.from_model(form)
+    return FormPublic.from_model(service.patch(form_id, payload))
 
 
 @router.delete(

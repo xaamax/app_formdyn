@@ -1,6 +1,6 @@
 import pytest
 
-from app.modules.forms.exceptions import FormNotFoundError
+from app.core.exceptions import BadRequestException, NotFoundException
 from app.modules.forms.models import Form
 from app.modules.forms.schemas import FormPartial, FormSchema
 from app.modules.forms.service import FormService
@@ -28,6 +28,9 @@ class FakeFormRepository:
         self.data.pop(form.id, None)
 
 
+# ---------- LIST ----------
+
+
 def test_form_service_list():
     repo = FakeFormRepository()
     service = FormService(repo)
@@ -42,6 +45,9 @@ def test_form_service_list():
     assert result[1].name == 'Form B'
 
 
+# ---------- CREATE ----------
+
+
 def test_form_service_create():
     repo = FakeFormRepository()
     service = FormService(repo)
@@ -51,6 +57,19 @@ def test_form_service_create():
     assert form.id == 1
     assert form.name == 'Form A'
     assert form.type == 1
+
+
+def test_form_service_create_invalid_type():
+    repo = FakeFormRepository()
+    service = FormService(repo)
+
+    with pytest.raises(
+        BadRequestException, match='0 não é um tipo válido'
+    ):
+        service.create(FormSchema(name='Invalid', type=0))
+
+
+# ---------- GET ----------
 
 
 def test_form_service_get_success():
@@ -69,8 +88,11 @@ def test_form_service_get_not_found():
     repo = FakeFormRepository()
     service = FormService(repo)
 
-    with pytest.raises(FormNotFoundError):
+    with pytest.raises(NotFoundException, match='Formulário não encontrado'):
         service.get(999)
+
+
+# ---------- UPDATE ----------
 
 
 def test_form_service_update():
@@ -90,8 +112,23 @@ def test_form_service_update_not_found():
     repo = FakeFormRepository()
     service = FormService(repo)
 
-    with pytest.raises(FormNotFoundError):
+    with pytest.raises(NotFoundException, match='Formulário não encontrado'):
         service.update(999, FormSchema(name='X', type=1))
+
+
+def test_form_service_update_invalid_type():
+    repo = FakeFormRepository()
+    service = FormService(repo)
+
+    created = service.create(FormSchema(name='Original', type=1))
+
+    with pytest.raises(
+        BadRequestException, match='0 não é um tipo válido'
+    ):
+        service.update(created.id, FormSchema(name='Updated', type=0))
+
+
+# ---------- PATCH ----------
 
 
 def test_form_service_patch():
@@ -106,12 +143,27 @@ def test_form_service_patch():
     assert patched.type == 1
 
 
+def test_form_service_patch_invalid_type():
+    repo = FakeFormRepository()
+    service = FormService(repo)
+
+    created = service.create(FormSchema(name='Original', type=1))
+
+    with pytest.raises(
+        BadRequestException, match='0 não é um tipo válido'
+    ):
+        service.patch(created.id, FormPartial(type=0))
+
+
 def test_form_service_patch_not_found():
     repo = FakeFormRepository()
     service = FormService(repo)
 
-    with pytest.raises(FormNotFoundError):
+    with pytest.raises(NotFoundException, match='Formulário não encontrado'):
         service.patch(999, FormPartial(name='X'))
+
+
+# ---------- DELETE ----------
 
 
 def test_form_service_delete():
@@ -122,7 +174,7 @@ def test_form_service_delete():
 
     service.delete(created.id)
 
-    with pytest.raises(FormNotFoundError):
+    with pytest.raises(NotFoundException, match='Formulário não encontrado'):
         service.get(created.id)
 
 
@@ -130,5 +182,5 @@ def test_form_service_delete_not_found():
     repo = FakeFormRepository()
     service = FormService(repo)
 
-    with pytest.raises(FormNotFoundError):
+    with pytest.raises(NotFoundException, match='Formulário não encontrado'):
         service.delete(999)

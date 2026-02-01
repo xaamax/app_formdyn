@@ -9,7 +9,7 @@ class Form(EntityBase):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(Text, nullable=False)
-    type = Column(Integer)
+    type = Column(Integer, nullable=True)
 
     fields = relationship(
         'Field',

@@ -15,8 +15,8 @@ def test_create_form(client):
 
 
 def test_list_forms(client):
-    _create_form(client, 'A', 1)
-    _create_form(client, 'B', 2)
+    _create_form(client, 'Form A', 1)
+    _create_form(client, 'Form B', 2)
 
     response = client.get('/api/v1/forms/?page_number=1&page_size=10')
     assert response.status_code == 200
@@ -42,7 +42,10 @@ def test_get_form_not_found(client):
     response = client.get('/api/v1/forms/999')
 
     assert response.status_code == 404
-    assert response.json()['detail'] == 'Form not found'
+
+    body = response.json()
+    assert body['status_code'] == 404
+    assert body['detail'] == 'Formulário não encontrado'
 
 
 def test_update_form(client):
@@ -67,7 +70,10 @@ def test_update_form_not_found(client):
     )
 
     assert response.status_code == 404
-    assert response.json()['detail'] == 'Form not found'
+
+    body = response.json()
+    assert body['status_code'] == 404
+    assert body['detail'] == 'Formulário não encontrado'
 
 
 def test_patch_form(client):
@@ -89,7 +95,10 @@ def test_patch_form_not_found(client):
     )
 
     assert response.status_code == 404
-    assert response.json()['detail'] == 'Form not found'
+
+    body = response.json()
+    assert body['status_code'] == 404
+    assert body['detail'] == 'Formulário não encontrado'
 
 
 def test_delete_form(client):
@@ -103,4 +112,7 @@ def test_delete_form_not_found(client):
     response = client.delete('/api/v1/forms/999')
 
     assert response.status_code == 404
-    assert response.json()['detail'] == 'Form not found'
+
+    body = response.json()
+    assert body['status_code'] == 404
+    assert body['detail'] == 'Formulário não encontrado'

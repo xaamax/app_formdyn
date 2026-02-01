@@ -4,7 +4,7 @@ def _create_form(client):
         json={
             'name': 'Form Teste',
             'order': 1,
-            'active': True,
+            'type': 1,
         },
     )
     assert response.status_code == 201

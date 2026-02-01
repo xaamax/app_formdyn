@@ -33,7 +33,7 @@ def client():
 
     application.dependency_overrides[get_session] = override_get_session
 
-    with TestClient(application) as test_client:
+    with TestClient(application, raise_server_exceptions=False) as test_client:
         yield test_client
 
     application.dependency_overrides.clear()

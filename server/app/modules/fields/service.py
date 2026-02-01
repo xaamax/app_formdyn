@@ -1,4 +1,4 @@
-from app.shared.exceptions import ApplicationException
+from server.app.core.exceptions import AppException
 
 from .models import Field
 from .repository import FieldRepository
@@ -19,7 +19,7 @@ class FieldService:
     def get(self, form_id: int) -> Field:
         form = self.repository.get_by_id(form_id)
         if not form:
-            raise ApplicationException()
+            raise AppException()
         return form
 
     def update(self, form_id: int, data: FieldSchema) -> Field:

@@ -8,7 +8,7 @@ from app.shared.pagination import PaginatedResponse
 
 class FormSchema(BaseModel):
     name: str
-    type: Optional[int] = None
+    type: int
 
 
 class FormPartial(BaseModel):
@@ -19,16 +19,12 @@ class FormPartial(BaseModel):
 class FormPublic(BaseModel):
     id: int
     name: str
-    type: str | None
+    type: str
 
     @classmethod
     def from_model(cls, model):
         return cls(
-            id=model.id,
-            name=model.name,
-            type=FormTypeEnum(model.type).label
-            if model.type is not None
-            else None,
+            id=model.id, name=model.name, type=FormTypeEnum(model.type).label
         )
 
 
