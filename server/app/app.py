@@ -5,6 +5,7 @@ from app.core.exception_handlers import generic_exception_handler
 from .modules.answers.routers import router as answer_routers
 from .modules.fields.routers import router as field_routers
 from .modules.forms.routers import router as form_routers
+from .modules.forms_answers.routers import router as form_answer_routers
 from .modules.options_answers.routers import router as option_answer_routers
 
 app = FastAPI(
@@ -19,3 +20,4 @@ app.include_router(form_routers)
 app.include_router(field_routers)
 app.include_router(answer_routers)
 app.include_router(option_answer_routers)
+app.include_router(form_answer_routers)

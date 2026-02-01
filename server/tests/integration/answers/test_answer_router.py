@@ -44,7 +44,7 @@ def test_get_answers_success(client):
     created = _create_answers(client)
     id = created['id']
 
-    response = client.get(f'/api/v1/answers/{id}/')
+    response = client.get(f'/api/v1/answers/{id}')
     assert response.status_code == 200
 
     data = response.json()
@@ -53,7 +53,7 @@ def test_get_answers_success(client):
 
 
 def test_get_answers_not_found(client):
-    response = client.get('/api/v1/answers/999/')
+    response = client.get('/api/v1/answers/999')
 
     assert response.status_code == 404
     assert response.json()['detail'] == 'Resposta não encontrada'
@@ -64,7 +64,7 @@ def test_update_answers(client):
     id = created['id']
 
     response = client.put(
-        f'/api/v1/answers/{id}/',
+        f'/api/v1/answers/{id}',
         json={
             'description': 'teste_description',
             'legend': 'teste_legend',
@@ -85,7 +85,7 @@ def test_update_answers(client):
 
 def test_update_answers_not_found(client):
     response = client.put(
-        '/api/v1/answers/999/',
+        '/api/v1/answers/999',
         json={
             'description': 'teste_description',
             'legend': 'teste_legend',
@@ -105,7 +105,7 @@ def test_patch_answers(client):
     id = created['id']
 
     response = client.patch(
-        f'/api/v1/answers/{id}/',
+        f'/api/v1/answers/{id}',
         json={
             'description': 'teste_description',
             'order': 99,
@@ -121,7 +121,7 @@ def test_patch_answers(client):
 
 def test_patch_answers_not_found(client):
     response = client.patch(
-        '/api/v1/answers/999/',
+        '/api/v1/answers/999',
         json={'description': 'X'},
     )
 
@@ -133,12 +133,12 @@ def test_delete_answers(client):
     created = _create_answers(client)
     id = created['id']
 
-    response = client.delete(f'/api/v1/answers/{id}/')
+    response = client.delete(f'/api/v1/answers/{id}')
     assert response.status_code == 204
 
 
 def test_delete_answers_not_found(client):
-    response = client.delete('/api/v1/answers/999/')
+    response = client.delete('/api/v1/answers/999')
 
     assert response.status_code == 404
     assert response.json()['detail'] == 'Resposta não encontrada'

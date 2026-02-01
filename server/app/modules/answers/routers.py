@@ -27,7 +27,7 @@ def get_service(session: Session = Depends(get_session)):
 
 
 @router.post(
-    '/',
+    '',
     status_code=status.HTTP_201_CREATED,
     responses={400: {'model': ErrorResponse}},
 )
@@ -39,7 +39,7 @@ def create_field(
 
 
 @router.get(
-    '/',
+    '',
     response_model=AnswerListPaginated,
 )
 def list_fields(
@@ -57,7 +57,7 @@ def list_fields(
 
 
 @router.get(
-    '/{id}/',
+    '/{id}',
     response_model=AnswerPublic,
     responses={404: {'model': ErrorResponse}},
 )
@@ -69,7 +69,7 @@ def get_field(
 
 
 @router.put(
-    '/{id}/',
+    '/{id}',
     response_model=AnswerPublic,
     responses={
         400: {'model': ErrorResponse},
@@ -85,7 +85,7 @@ def update_field(
 
 
 @router.patch(
-    '/{id}/',
+    '/{id}',
     response_model=AnswerPublic,
     responses={
         400: {'model': ErrorResponse},
@@ -101,7 +101,7 @@ def patch_field(
 
 
 @router.delete(
-    '/{id}/',
+    '/{id}',
     status_code=status.HTTP_204_NO_CONTENT,
     responses={404: {'model': ErrorResponse}},
 )

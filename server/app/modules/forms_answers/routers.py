@@ -6,24 +6,24 @@ from app.core.database import get_session
 from app.shared.pagination import paginate_response
 from app.shared.schemas import ErrorResponse
 
-from .models import OptionAnswer
-from .repository import OptionAnswerRepository
+from .models import FormAnswer
+from .repository import FormAnswerRepository
 from .schemas import (
-    OptionAnswerListPaginated,
-    OptionAnswerPartial,
-    OptionAnswerPublic,
-    OptionAnswerSchema,
+    FormAnswerListPaginated,
+    FormAnswerPartial,
+    FormAnswerPublic,
+    FormAnswerSchema,
 )
-from .service import OptionAnswerService
+from .service import FormAnswerService
 
 router = APIRouter(
-    prefix='/api/v1/options_answers',
-    tags=['Opções de Respostas'],
+    prefix='/api/v1/forms_answers',
+    tags=['Respostas de Formulários'],
 )
 
 
 def get_service(session: Session = Depends(get_session)):
-    return OptionAnswerService(OptionAnswerRepository(session))
+    return FormAnswerService(FormAnswerRepository(session))
 
 
 @router.post(
@@ -32,45 +32,45 @@ def get_service(session: Session = Depends(get_session)):
     responses={400: {'model': ErrorResponse}},
 )
 def create_field(
-    payload: OptionAnswerSchema,
-    service: OptionAnswerService = Depends(get_service),
+    payload: FormAnswerSchema,
+    service: FormAnswerService = Depends(get_service),
 ):
-    return OptionAnswerPublic.from_model(service.create(payload))
+    return FormAnswerPublic.from_model(service.create(payload))
 
 
 @router.get(
     '',
-    response_model=OptionAnswerListPaginated,
+    response_model=FormAnswerListPaginated,
 )
 def list_fields(
     page_number: int = 1,
     page_size: int = 10,
-    service: OptionAnswerService = Depends(get_service),
+    service: FormAnswerService = Depends(get_service),
 ):
     return paginate_response(
         session=service.repository.session,
-        query=select(OptionAnswer),
+        query=select(FormAnswer),
         page_number=page_number,
         page_size=page_size,
-        mapper=OptionAnswerPublic.from_model,
+        mapper=FormAnswerPublic.from_model,
     )
 
 
 @router.get(
     '/{id}',
-    response_model=OptionAnswerPublic,
+    response_model=FormAnswerPublic,
     responses={404: {'model': ErrorResponse}},
 )
 def get_field(
     id: int,
-    service: OptionAnswerService = Depends(get_service),
+    service: FormAnswerService = Depends(get_service),
 ):
-    return OptionAnswerPublic.from_model(service.get(id))
+    return FormAnswerPublic.from_model(service.get(id))
 
 
 @router.put(
     '/{id}',
-    response_model=OptionAnswerPublic,
+    response_model=FormAnswerPublic,
     responses={
         400: {'model': ErrorResponse},
         404: {'model': ErrorResponse},
@@ -78,15 +78,15 @@ def get_field(
 )
 def update_field(
     id: int,
-    payload: OptionAnswerSchema,
-    service: OptionAnswerService = Depends(get_service),
+    payload: FormAnswerSchema,
+    service: FormAnswerService = Depends(get_service),
 ):
-    return OptionAnswerPublic.from_model(service.update(id, payload))
+    return FormAnswerPublic.from_model(service.update(id, payload))
 
 
 @router.patch(
     '/{id}',
-    response_model=OptionAnswerPublic,
+    response_model=FormAnswerPublic,
     responses={
         400: {'model': ErrorResponse},
         404: {'model': ErrorResponse},
@@ -94,10 +94,10 @@ def update_field(
 )
 def patch_field(
     id: int,
-    payload: OptionAnswerPartial,
-    service: OptionAnswerService = Depends(get_service),
+    payload: FormAnswerPartial,
+    service: FormAnswerService = Depends(get_service),
 ):
-    return OptionAnswerPublic.from_model(service.patch(id, payload))
+    return FormAnswerPublic.from_model(service.patch(id, payload))
 
 
 @router.delete(
@@ -107,6 +107,6 @@ def patch_field(
 )
 def delete_field(
     id: int,
-    service: OptionAnswerService = Depends(get_service),
+    service: FormAnswerService = Depends(get_service),
 ):
     service.delete(id)

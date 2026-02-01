@@ -24,3 +24,10 @@ class Form(EntityBase):
         cascade='all, delete-orphan',
         passive_deletes=True,
     )
+
+    forms_answers = relationship(
+        'FormAnswer',
+        back_populates='form',
+        cascade='all, delete-orphan',
+        passive_deletes=True,
+    )
