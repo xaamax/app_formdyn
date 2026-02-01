@@ -31,7 +31,7 @@ def get_service(session: Session = Depends(get_session)):
     status_code=status.HTTP_201_CREATED,
     responses={400: {'model': ErrorResponse}},
 )
-def create_field(
+def create_form_answer(
     payload: FormAnswerSchema,
     service: FormAnswerService = Depends(get_service),
 ):
@@ -42,7 +42,7 @@ def create_field(
     '',
     response_model=FormAnswerListPaginated,
 )
-def list_fields(
+def list_form_answers(
     page_number: int = 1,
     page_size: int = 10,
     service: FormAnswerService = Depends(get_service),
@@ -61,7 +61,7 @@ def list_fields(
     response_model=FormAnswerPublic,
     responses={404: {'model': ErrorResponse}},
 )
-def get_field(
+def get_form_answer(
     id: int,
     service: FormAnswerService = Depends(get_service),
 ):
@@ -76,7 +76,7 @@ def get_field(
         404: {'model': ErrorResponse},
     },
 )
-def update_field(
+def update_form_answer(
     id: int,
     payload: FormAnswerSchema,
     service: FormAnswerService = Depends(get_service),
@@ -92,7 +92,7 @@ def update_field(
         404: {'model': ErrorResponse},
     },
 )
-def patch_field(
+def patch_form_answer(
     id: int,
     payload: FormAnswerPartial,
     service: FormAnswerService = Depends(get_service),
@@ -105,7 +105,7 @@ def patch_field(
     status_code=status.HTTP_204_NO_CONTENT,
     responses={404: {'model': ErrorResponse}},
 )
-def delete_field(
+def delete_form_answer(
     id: int,
     service: FormAnswerService = Depends(get_service),
 ):
