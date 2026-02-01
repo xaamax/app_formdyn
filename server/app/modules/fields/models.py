@@ -14,6 +14,7 @@ class Field(EntityBase):
         nullable=False,
     )
     slug = Column(String, nullable=False)
+    name = Column(String, nullable=False)
     order = Column(Integer, nullable=False)
     label = Column(String, nullable=False)
     observation = Column(Text, nullable=True)

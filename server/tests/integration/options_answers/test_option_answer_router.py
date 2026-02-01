@@ -47,8 +47,9 @@ def test_create_option_answers(client):
     data = _create_option_answers(client)
 
     assert data['id'] is not None
-    assert 'form_name' in data
-    assert 'answer_description' in data
+    assert data['form_id'] == 1
+    assert data['answer_id'] == 1
+    assert data['order'] == 1
 
 
 def test_list_option_answers(client):
@@ -95,7 +96,7 @@ def test_update_option_answers(client):
         json={
             'form_id': new_form['id'],
             'answer_id': new_answer['id'],
-            'order': 10,
+            'order': 2,
         },
     )
 
@@ -103,8 +104,8 @@ def test_update_option_answers(client):
     data = response.json()
 
     assert data['id'] == option_answer_id
-    assert data['form_name'] == new_form['name']
-    assert data['answer_description'] == new_answer['description']
+    assert data['answer_id'] == new_answer['id']
+    assert data['order'] == 2
 
 
 def test_update_option_answers_not_found(client):

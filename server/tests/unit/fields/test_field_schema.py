@@ -10,6 +10,7 @@ def test_field_schema_valid_minimal():
     schema = FieldSchema(
         form_id=1,
         slug='name',
+        name='name',
         label='Nome',
         type=FieldTypeEnum.FRASE.value,
         order=1,
@@ -18,6 +19,7 @@ def test_field_schema_valid_minimal():
 
     assert schema.form_id == 1
     assert schema.slug == 'name'
+    assert schema.name == 'name'
     assert schema.label == 'Nome'
     assert schema.type == FieldTypeEnum.FRASE.value
     assert schema.readonly is False
@@ -35,6 +37,7 @@ def test_field_schema_accepts_optional_fields():
     schema = FieldSchema(
         form_id=1,
         slug='email',
+        name='email',
         label='E-mail',
         type=FieldTypeEnum.TEXTO.value,
         order=2,
@@ -58,6 +61,7 @@ def test_field_public_from_model_basic():
         id=1,
         form_id=1,
         slug='name',
+        name='name',
         label='Nome',
         type=FieldTypeEnum.FRASE.value,
         order=1,
@@ -74,6 +78,7 @@ def test_field_public_from_model_basic():
 
     assert public.id == 1
     assert public.slug == 'name'
+    assert public.name == 'name'
     assert public.label == 'Nome'
     assert public.type == FieldTypeEnum.FRASE.label
     assert public.readonly is False
@@ -84,6 +89,7 @@ def test_field_public_from_model_with_optional_fields():
         id=2,
         form_id=1,
         slug='email',
+        name='name',
         label='E-mail',
         type=FieldTypeEnum.TEXTO.value,
         order=2,

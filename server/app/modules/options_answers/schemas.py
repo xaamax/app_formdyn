@@ -16,21 +16,31 @@ class OptionAnswerPartial(BaseModel):
     answer_id: Optional[int] = None
     order: Optional[int] = None
 
-
 class OptionAnswerPublic(BaseModel):
     id: int
-    form_name: str
-    answer_description: str
+    form_id: int
+    answer_id: int
+    order: int
 
     @classmethod
     def from_model(cls, model):
-        data = {
-            'id': model.id,
-            'order': model.order,
-            'form_name': model.form.name,
-            'answer_description': model.answer.description,
-        }
+        data = { **model.__dict__, }
         return cls.model_validate(data)
+
+# class OptionAnswerWithFormAndAnswer(BaseModel):
+#     id: int
+#     form_name: str
+#     answer_description: str
+
+#     @classmethod
+#     def from_model(cls, model):
+#         data = {
+#             'id': model.id,
+#             'order': model.order,
+#             'form': model.form.name,
+#             'answer': model.answer.description,
+#         }
+#         return cls.model_validate(data)
 
 
 OptionAnswerListPaginated = PaginatedResponse[OptionAnswerPublic]

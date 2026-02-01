@@ -4,6 +4,7 @@ def _create_field(client):
         json={
             'form_id': 1,
             'slug': 'campo_teste',
+            'name': 'campo_teste',
             'label': 'Campo Teste',
             'type': 1,
             'order': 1,
@@ -25,6 +26,7 @@ def test_create_field(client):
 
     assert data['id'] is not None
     assert data['slug'] == 'campo_teste'
+    assert data['name'] == 'campo_teste'
     assert data['label'] == 'Campo Teste'
     assert data['type'] == 'Texto' or isinstance(data['type'], str)
     assert data['order'] == 1
@@ -73,6 +75,7 @@ def test_update_field(client):
         json={
             'form_id': 1,
             'slug': 'campo_atualizado',
+            'name': 'campo_atualizado',
             'label': 'Campo Atualizado',
             'type': 2,
             'order': 2,
@@ -90,6 +93,7 @@ def test_update_field(client):
     data = response.json()
 
     assert data['slug'] == 'campo_atualizado'
+    assert data['name'] == 'campo_atualizado'
     assert data['label'] == 'Campo Atualizado'
     assert data['order'] == 2
     assert data['readonly'] is True
@@ -101,6 +105,7 @@ def test_update_field_not_found(client):
         json={
             'form_id': 1,
             'slug': 'x',
+            'name': 'x',
             'label': 'x',
             'type': 1,
             'order': 1,

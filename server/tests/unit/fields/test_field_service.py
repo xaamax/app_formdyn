@@ -32,6 +32,7 @@ def valid_field_schema(**overrides):
     data = {
         'form_id': 1,
         'slug': 'field_slug',
+        'name': 'field_name',
         'label': 'Field Label',
         'type': 1,
         'order': 1,

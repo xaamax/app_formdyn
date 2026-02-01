@@ -10,6 +10,7 @@ from .enums import FieldTypeEnum
 class FieldSchema(BaseModel):
     form_id: int
     slug: str
+    name: str
     label: str
     type: int
     order: int
@@ -24,6 +25,7 @@ class FieldSchema(BaseModel):
 
 class FieldPartial(BaseModel):
     slug: Optional[str] = None
+    name: Optional[str] = None
     label: Optional[str] = None
     type: Optional[int] = None
     order: Optional[int] = None
@@ -39,6 +41,7 @@ class FieldPartial(BaseModel):
 class FieldPublic(BaseModel):
     id: int
     slug: str
+    name: str
     label: str
     type: str
     order: int
