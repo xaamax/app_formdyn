@@ -37,4 +37,4 @@ class AnswerPublic(BaseModel):
         return cls.model_validate(model.__dict__)
 
 
-AnswerPaginated = PaginatedResponse[AnswerPublic]
+AnswerListPaginated = PaginatedResponse[AnswerPublic]

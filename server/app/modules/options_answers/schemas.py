@@ -20,7 +20,7 @@ class OptionAnswerPartial(BaseModel):
 class OptionAnswerPublic(BaseModel):
     id: int
     form_name: str
-    answer_description: str | None
+    answer_description: str
 
     @classmethod
     def from_model(cls, model):
@@ -28,11 +28,9 @@ class OptionAnswerPublic(BaseModel):
             'id': model.id,
             'order': model.order,
             'form_name': model.form.name,
-            'answer_description': (
-                model.answer.description if model.answer is not None else None
-            ),
+            'answer_description': model.answer.description,
         }
         return cls.model_validate(data)
 
 
-OptionAnswerPaginated = PaginatedResponse[OptionAnswerPublic]
+OptionAnswerListPaginated = PaginatedResponse[OptionAnswerPublic]

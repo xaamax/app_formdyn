@@ -1,12 +1,20 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
+from sqlalchemy import select
 from sqlalchemy.orm import Session
-from sqlalchemy.sql import select
 
 from app.core.database import get_session
-from app.core.models import Answer
 from app.shared.pagination import paginate_response
+from app.shared.schemas import ErrorResponse
 
-from .schemas import AnswerPaginated, AnswerPartial, AnswerPublic, AnswerSchema
+from .models import Answer
+from .repository import AnswerRepository
+from .schemas import (
+    AnswerListPaginated,
+    AnswerPartial,
+    AnswerPublic,
+    AnswerSchema,
+)
+from .service import AnswerService
 
 router = APIRouter(
     prefix='/api/v1/answers',
@@ -14,29 +22,33 @@ router = APIRouter(
 )
 
 
+def get_service(session: Session = Depends(get_session)):
+    return AnswerService(AnswerRepository(session))
+
+
 @router.post(
-    '/', response_model=AnswerPublic, status_code=status.HTTP_201_CREATED
+    '/',
+    status_code=status.HTTP_201_CREATED,
+    responses={400: {'model': ErrorResponse}},
 )
 def create_field(
-    payload: AnswerSchema, session: Session = Depends(get_session)
+    payload: AnswerSchema,
+    service: AnswerService = Depends(get_service),
 ):
-    db_field = Answer(**payload.model_dump())
-    session.add(db_field)
-    session.commit()
-    session.refresh(db_field)
-    return AnswerPublic.from_model(db_field)
+    return AnswerPublic.from_model(service.create(payload))
 
 
 @router.get(
-    path='/', response_model=AnswerPaginated, status_code=status.HTTP_200_OK
+    '/',
+    response_model=AnswerListPaginated,
 )
-def list_answers(
-    session: Session = Depends(get_session),
+def list_fields(
     page_number: int = 1,
     page_size: int = 10,
+    service: AnswerService = Depends(get_service),
 ):
     return paginate_response(
-        session=session,
+        session=service.repository.session,
         query=select(Answer),
         page_number=page_number,
         page_size=page_size,
@@ -45,74 +57,56 @@ def list_answers(
 
 
 @router.get(
-    path='/{field_id}',
+    '/{id}',
     response_model=AnswerPublic,
-    status_code=status.HTTP_200_OK,
+    responses={404: {'model': ErrorResponse}},
 )
 def get_field(
-    field_id: int,
-    session: Session = Depends(get_session),
+    id: int,
+    service: AnswerService = Depends(get_service),
 ):
-    field = session.get(Answer, field_id)
-    if not field:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail='Answer not found'
-        )
-    return AnswerPublic.from_model(field)
+    return AnswerPublic.from_model(service.get(id))
 
 
 @router.put(
-    path='/{field_id}',
+    '/{id}',
     response_model=AnswerPublic,
-    status_code=status.HTTP_201_CREATED,
+    responses={
+        400: {'model': ErrorResponse},
+        404: {'model': ErrorResponse},
+    },
 )
 def update_field(
-    field_id: int,
-    field: AnswerSchema,
-    session: Session = Depends(get_session),
+    id: int,
+    payload: AnswerSchema,
+    service: AnswerService = Depends(get_service),
 ):
-    db_field = session.get(Answer, field_id)
-    if not db_field:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail='Answer not found'
-        )
-    for attr, value in field.model_dump().items():
-        setattr(db_field, attr, value)
-    session.commit()
-    session.refresh(db_field)
-    return AnswerPublic.from_model(db_field)
+    return AnswerPublic.from_model(service.update(id, payload))
 
 
-@router.patch(path='/{field_id}', response_model=AnswerPublic)
+@router.patch(
+    '/{id}',
+    response_model=AnswerPublic,
+    responses={
+        400: {'model': ErrorResponse},
+        404: {'model': ErrorResponse},
+    },
+)
 def patch_field(
-    field_id: int,
-    field: AnswerPartial,
-    session: Session = Depends(get_session),
+    id: int,
+    payload: AnswerPartial,
+    service: AnswerService = Depends(get_service),
 ):
-    db_field = session.get(Answer, field_id)
-    if not db_field:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail='Answer not found'
-        )
-    update_data = {
-        k: v for k, v in field.model_dump(exclude_unset=True).items()
-    }
-    for attr, value in update_data.items():
-        setattr(db_field, attr, value)
-    session.commit()
-    session.refresh(db_field)
-    return AnswerPublic.from_model(db_field)
+    return AnswerPublic.from_model(service.patch(id, payload))
 
 
-@router.delete(path='/{field_id}', status_code=status.HTTP_204_NO_CONTENT)
+@router.delete(
+    '/{id}',
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={404: {'model': ErrorResponse}},
+)
 def delete_field(
-    field_id: int,
-    session: Session = Depends(get_session),
+    id: int,
+    service: AnswerService = Depends(get_service),
 ):
-    field = session.get(Answer, field_id)
-    if not field:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail='Answer not found'
-        )
-    session.delete(field)
-    session.commit()
+    service.delete(id)

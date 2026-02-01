@@ -11,7 +11,7 @@ def _create_form(client):
     return response.json()
 
 
-def _create_answer(client):
+def _create_answers(client):
     response = client.post(
         '/api/v1/answers/',
         json={
@@ -27,9 +27,9 @@ def _create_answer(client):
     return response.json()
 
 
-def _create_option_answer(client):
+def _create_option_answers(client):
     form = _create_form(client)
-    answer = _create_answer(client)
+    answer = _create_answers(client)
 
     response = client.post(
         '/api/v1/options_answers/',
@@ -43,17 +43,17 @@ def _create_option_answer(client):
     return response.json()
 
 
-def test_create_option_answer(client):
-    data = _create_option_answer(client)
+def test_create_option_answers(client):
+    data = _create_option_answers(client)
 
     assert data['id'] is not None
     assert 'form_name' in data
     assert 'answer_description' in data
 
 
-def test_list_options_answers(client):
-    _create_option_answer(client)
-    _create_option_answer(client)
+def test_list_option_answers(client):
+    _create_option_answers(client)
+    _create_option_answers(client)
 
     response = client.get('/api/v1/options_answers/')
     assert response.status_code == 200
@@ -65,8 +65,8 @@ def test_list_options_answers(client):
     assert len(body['items']) == 2
 
 
-def test_get_option_answer_success(client):
-    created = _create_option_answer(client)
+def test_get_option_answers_success(client):
+    created = _create_option_answers(client)
     option_answer_id = created['id']
 
     response = client.get(f'/api/v1/options_answers/{option_answer_id}')
@@ -76,19 +76,19 @@ def test_get_option_answer_success(client):
     assert data['id'] == option_answer_id
 
 
-def test_get_option_answer_not_found(client):
+def test_get_option_answers_not_found(client):
     response = client.get('/api/v1/options_answers/999')
 
     assert response.status_code == 404
-    assert response.json()['detail'] == 'OptionAnswer not found'
+    assert response.json()['detail'] == 'Opção de Resposta não encontrada'
 
 
-def test_update_option_answer(client):
-    created = _create_option_answer(client)
+def test_update_option_answers(client):
+    created = _create_option_answers(client)
     option_answer_id = created['id']
 
     new_form = _create_form(client)
-    new_answer = _create_answer(client)
+    new_answer = _create_answers(client)
 
     response = client.put(
         f'/api/v1/options_answers/{option_answer_id}',
@@ -99,7 +99,7 @@ def test_update_option_answer(client):
         },
     )
 
-    assert response.status_code == 201
+    assert response.status_code == 200
     data = response.json()
 
     assert data['id'] == option_answer_id
@@ -107,7 +107,7 @@ def test_update_option_answer(client):
     assert data['answer_description'] == new_answer['description']
 
 
-def test_update_option_answer_not_found(client):
+def test_update_option_answers_not_found(client):
     response = client.put(
         '/api/v1/options_answers/999',
         json={
@@ -118,11 +118,11 @@ def test_update_option_answer_not_found(client):
     )
 
     assert response.status_code == 404
-    assert response.json()['detail'] == 'OptionAnswer not found'
+    assert response.json()['detail'] == 'Opção de Resposta não encontrada'
 
 
-def test_patch_option_answer(client):
-    created = _create_option_answer(client)
+def test_patch_option_answers(client):
+    created = _create_option_answers(client)
     option_answer_id = created['id']
 
     response = client.patch(
@@ -138,26 +138,26 @@ def test_patch_option_answer(client):
     assert data['id'] == option_answer_id
 
 
-def test_patch_option_answer_not_found(client):
+def test_patch_option_answers_not_found(client):
     response = client.patch(
         '/api/v1/options_answers/999',
         json={'order': 5},
     )
 
     assert response.status_code == 404
-    assert response.json()['detail'] == 'OptionAnswer not found'
+    assert response.json()['detail'] == 'Opção de Resposta não encontrada'
 
 
-def test_delete_option_answer(client):
-    created = _create_option_answer(client)
+def test_delete_option_answers(client):
+    created = _create_option_answers(client)
     option_answer_id = created['id']
 
     response = client.delete(f'/api/v1/options_answers/{option_answer_id}')
     assert response.status_code == 204
 
 
-def test_delete_option_answer_not_found(client):
+def test_delete_option_answers_not_found(client):
     response = client.delete('/api/v1/options_answers/999')
 
     assert response.status_code == 404
-    assert response.json()['detail'] == 'OptionAnswer not found'
+    assert response.json()['detail'] == 'Opção de Resposta não encontrada'

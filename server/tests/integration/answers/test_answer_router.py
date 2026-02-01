@@ -56,7 +56,7 @@ def test_get_answers_not_found(client):
     response = client.get('/api/v1/answers/999')
 
     assert response.status_code == 404
-    assert response.json()['detail'] == 'Answer not found'
+    assert response.json()['detail'] == 'Resposta não encontrada'
 
 
 def test_update_answers(client):
@@ -75,7 +75,7 @@ def test_update_answers(client):
         },
     )
 
-    assert response.status_code == 201
+    assert response.status_code == 200
     data = response.json()
 
     assert data['id'] is not None
@@ -97,7 +97,7 @@ def test_update_answers_not_found(client):
     )
 
     assert response.status_code == 404
-    assert response.json()['detail'] == 'Answer not found'
+    assert response.json()['detail'] == 'Resposta não encontrada'
 
 
 def test_patch_answers(client):
@@ -126,7 +126,7 @@ def test_patch_answers_not_found(client):
     )
 
     assert response.status_code == 404
-    assert response.json()['detail'] == 'Answer not found'
+    assert response.json()['detail'] == 'Resposta não encontrada'
 
 
 def test_delete_answers(client):
@@ -141,4 +141,4 @@ def test_delete_answers_not_found(client):
     response = client.delete('/api/v1/answers/999')
 
     assert response.status_code == 404
-    assert response.json()['detail'] == 'Answer not found'
+    assert response.json()['detail'] == 'Resposta não encontrada'
