@@ -57,7 +57,7 @@ def list_fields(
 
 
 @router.get(
-    '/{id}',
+    '/{id}/',
     response_model=OptionAnswerPublic,
     responses={404: {'model': ErrorResponse}},
 )
@@ -69,7 +69,7 @@ def get_field(
 
 
 @router.put(
-    '/{id}',
+    '/{id}/',
     response_model=OptionAnswerPublic,
     responses={
         400: {'model': ErrorResponse},
@@ -85,7 +85,7 @@ def update_field(
 
 
 @router.patch(
-    '/{id}',
+    '/{id}/',
     response_model=OptionAnswerPublic,
     responses={
         400: {'model': ErrorResponse},
@@ -101,7 +101,7 @@ def patch_field(
 
 
 @router.delete(
-    '/{id}',
+    '/{id}/',
     status_code=status.HTTP_204_NO_CONTENT,
     responses={404: {'model': ErrorResponse}},
 )

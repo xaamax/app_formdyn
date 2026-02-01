@@ -57,7 +57,7 @@ def list_forms(
 
 
 @router.get(
-    '/{id}',
+    '/{id}/',
     response_model=FormPublic,
     responses={404: {'model': ErrorResponse}},
 )
@@ -69,7 +69,7 @@ def get_form(
 
 
 @router.put(
-    '/{id}',
+    '/{id}/',
     response_model=FormPublic,
     responses={
         400: {'model': ErrorResponse},
@@ -85,7 +85,7 @@ def update_form(
 
 
 @router.patch(
-    '/{id}',
+    '/{id}/',
     response_model=FormPublic,
     responses={
         400: {'model': ErrorResponse},
@@ -101,7 +101,7 @@ def patch_form(
 
 
 @router.delete(
-    '/{id}',
+    '/{id}/',
     status_code=status.HTTP_204_NO_CONTENT,
     responses={404: {'model': ErrorResponse}},
 )
