@@ -16,6 +16,6 @@ app = FastAPI(
 app.add_exception_handler(Exception, generic_exception_handler)
 
 app.include_router(form_routers)
-app.include_router(option_answer_routers)
 app.include_router(field_routers)
 app.include_router(answer_routers)
+app.include_router(option_answer_routers)

@@ -6,59 +6,62 @@ from .repository import FormRepository
 from .schemas import FormPartial, FormSchema
 
 
+def _validate_type(value: int) -> FormTypeEnum:
+    try:
+        return FormTypeEnum(value)
+    except ValueError:
+        raise BadRequestException(f'{value} não é um tipo válido')
+
+
 class FormService:
     def __init__(self, repository: FormRepository):
         self.repository = repository
 
-    def create(self, data: FormSchema) -> Form:
-        try:
-            form_type = FormTypeEnum(data.type)
-        except ValueError:
-            raise BadRequestException(
-                f'{data.type} não é um tipo válido'
-            )
+    def _get_or_404(self, id: int) -> Form:
+        model = self.repository.get_by_id(id)
+        if not model:
+            raise NotFoundException('Formulário não encontrado')
+        return model
 
-        form = Form(name=data.name, type=form_type)
-        return self.repository.create(form)
+    def create(self, data: FormSchema) -> Form:
+        model = Form(**{
+            **data.model_dump(exclude={'type'}),
+            'type': _validate_type(data.type),
+        })
+        return self.repository.create(model)
 
     def list(self):
         return self.repository.list()
 
-    def get(self, form_id: int) -> Form:
-        form = self.repository.get_by_id(form_id)
-        if not form:
-            raise NotFoundException('Formulário não encontrado')
-        return form
+    def get(self, id: int) -> Form:
+        return self._get_or_404(id)
 
-    def update(self, form_id: int, data: FormSchema) -> Form:
-        form = self.get(form_id)
+    def update(self, id: int, data: FormSchema) -> Form:
+        model = self._get_or_404(id)
 
-        try:
-            form.type = FormTypeEnum(data.type)
-        except ValueError:
-            raise BadRequestException(
-                f'{data.type} não é um tipo válido'
-            )
+        update_data = data.model_dump()
 
-        form.name = data.name
-        return self.repository.create(form)
+        if 'type' in update_data:
+            update_data['type'] = _validate_type(update_data['type'])
 
-    def patch(self, form_id: int, data: FormPartial) -> Form:
-        form = self.get(form_id)
+        for attr, value in update_data.items():
+            setattr(model, attr, value)
 
-        if data.name is not None:
-            form.name = data.name
+        return self.repository.create(model)
 
-        if data.type is not None:
-            try:
-                form.type = FormTypeEnum(data.type)
-            except ValueError:
-                raise BadRequestException(
-                    f'{data.type} não é um tipo válido'
-                )
+    def patch(self, id: int, data: FormPartial) -> Form:
+        model = self._get_or_404(id)
 
-        return self.repository.create(form)
+        update_data = data.model_dump(exclude_unset=True)
 
-    def delete(self, form_id: int):
-        form = self.get(form_id)
-        self.repository.delete(form)
+        if 'type' in update_data:
+            update_data['type'] = _validate_type(update_data['type'])
+
+        for attr, value in update_data.items():
+            setattr(model, attr, value)
+
+        return self.repository.create(model)
+
+    def delete(self, id: int):
+        model = self._get_or_404(id)
+        self.repository.delete(model)

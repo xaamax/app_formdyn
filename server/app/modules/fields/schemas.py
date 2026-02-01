@@ -63,4 +63,4 @@ class FieldPublic(BaseModel):
         return cls.model_validate(data)
 
 
-FieldPaginated = PaginatedResponse[FieldPublic]
+FieldListPaginated = PaginatedResponse[FieldPublic]

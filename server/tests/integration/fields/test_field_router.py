@@ -61,7 +61,7 @@ def test_get_field_not_found(client):
     response = client.get('/api/v1/fields/999')
 
     assert response.status_code == 404
-    assert response.json()['detail'] == 'Field not found'
+    assert response.json()['detail'] == 'Campo não encontrado'
 
 
 def test_update_field(client):
@@ -86,7 +86,7 @@ def test_update_field(client):
         },
     )
 
-    assert response.status_code == 201
+    assert response.status_code == 200
     data = response.json()
 
     assert data['slug'] == 'campo_atualizado'
@@ -109,7 +109,7 @@ def test_update_field_not_found(client):
     )
 
     assert response.status_code == 404
-    assert response.json()['detail'] == 'Field not found'
+    assert response.json()['detail'] == 'Campo não encontrado'
 
 
 def test_patch_field(client):
@@ -138,7 +138,7 @@ def test_patch_field_not_found(client):
     )
 
     assert response.status_code == 404
-    assert response.json()['detail'] == 'Field not found'
+    assert response.json()['detail'] == 'Campo não encontrado'
 
 
 def test_delete_field(client):
@@ -153,4 +153,4 @@ def test_delete_field_not_found(client):
     response = client.delete('/api/v1/fields/999')
 
     assert response.status_code == 404
-    assert response.json()['detail'] == 'Field not found'
+    assert response.json()['detail'] == 'Campo não encontrado'

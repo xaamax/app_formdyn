@@ -57,19 +57,19 @@ def list_forms(
 
 
 @router.get(
-    '/{form_id}',
+    '/{id}',
     response_model=FormPublic,
     responses={404: {'model': ErrorResponse}},
 )
 def get_form(
-    form_id: int,
+    id: int,
     service: FormService = Depends(get_service),
 ):
-    return FormPublic.from_model(service.get(form_id))
+    return FormPublic.from_model(service.get(id))
 
 
 @router.put(
-    '/{form_id}',
+    '/{id}',
     response_model=FormPublic,
     responses={
         400: {'model': ErrorResponse},
@@ -77,15 +77,15 @@ def get_form(
     },
 )
 def update_form(
-    form_id: int,
+    id: int,
     payload: FormSchema,
     service: FormService = Depends(get_service),
 ):
-    return FormPublic.from_model(service.update(form_id, payload))
+    return FormPublic.from_model(service.update(id, payload))
 
 
 @router.patch(
-    '/{form_id}',
+    '/{id}',
     response_model=FormPublic,
     responses={
         400: {'model': ErrorResponse},
@@ -93,20 +93,20 @@ def update_form(
     },
 )
 def patch_form(
-    form_id: int,
+    id: int,
     payload: FormPartial,
     service: FormService = Depends(get_service),
 ):
-    return FormPublic.from_model(service.patch(form_id, payload))
+    return FormPublic.from_model(service.patch(id, payload))
 
 
 @router.delete(
-    '/{form_id}',
+    '/{id}',
     status_code=status.HTTP_204_NO_CONTENT,
     responses={404: {'model': ErrorResponse}},
 )
 def delete_form(
-    form_id: int,
+    id: int,
     service: FormService = Depends(get_service),
 ):
-    service.delete(form_id)
+    service.delete(id)
