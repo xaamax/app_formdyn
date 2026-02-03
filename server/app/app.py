@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.exception_handlers import generic_exception_handler
 
@@ -12,6 +13,16 @@ app = FastAPI(
     title='FormDyn API',
     description='API de Gestão de formulários dinâmicos',
     version='0.1.0',
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 app.add_exception_handler(Exception, generic_exception_handler)

@@ -1,2 +1,2 @@
-export * from "./painel-controle/painel-controle";
+export * from "./formularios/formularios";
 export * from "./errors/404";

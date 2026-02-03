@@ -2,7 +2,7 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import { DashboardLayout } from "@/layouts/dashboard/dashboard-layout";
 import RootLayout from "@/layouts/root/root-layout";
 import {
-  PainelControle,
+  Formularios,
   Error404,
 } from "@/pages/index";
 
@@ -17,12 +17,12 @@ export const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: <Navigate to="painel-controle" replace />,
+            element: <Navigate to="formularios/consultar" replace />,
           },
           {
             index: true,
-            path: "painel-controle",
-            element: <PainelControle />,
+            path: "formularios/consultar",
+            element: <Formularios />,
           },
         ],
       },

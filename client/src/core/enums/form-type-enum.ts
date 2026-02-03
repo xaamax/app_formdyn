@@ -1,0 +1,6 @@
+export enum FormTypeEnum {
+    FORMULARIO_ENSINO_FUNDAMENTAL = 1,
+    FORMULARIO_ENSINO_MEDIO = 2,
+    FORMULARIO_EJA = 3
+}
+
